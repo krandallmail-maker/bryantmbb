@@ -85,6 +85,7 @@ const expertAnalysis = [
 const recruitsGrid = document.getElementById('recruits-grid');
 const updatesTimeline = document.getElementById('updates-timeline');
 const expertAnalysisList = document.getElementById('expert-analysis-list');
+const bryantTimelineEl = document.getElementById('bryant-timeline');
 const positionFilter = document.getElementById('position-filter');
 const statusFilter = document.getElementById('status-filter');
 const lastUpdatedEl = document.getElementById('last-updated');
@@ -310,6 +311,29 @@ function renderExpertAnalysis() {
   });
 }
 
+function renderBryantTimeline() {
+  if (!bryantTimelineEl) return;
+
+  bryantTimelineEl.innerHTML = '';
+
+  const item = document.createElement('article');
+  item.className = 'timeline-item';
+  item.innerHTML = `
+    <div class="timeline-dot"></div>
+    <div class="timeline-date">${formatDate(new Date().toISOString().slice(0, 10))}</div>
+    <div class="timeline-tag">Verbal Commits</div>
+    <div class="timeline-title">Check Bryant’s live recruiting / roster log</div>
+    <div class="timeline-body">
+      Open the Bryant page on Verbal Commits in a new tab to see the latest scholarship chart,
+      transfer and commitment activity, then manually add any key notes you care about to this app.
+      <a href="https://www.verbalcommits.com/schools/bryant" target="_blank" rel="noopener noreferrer">
+        Go to Bryant on Verbal Commits
+      </a>.
+    </div>
+  `;
+  bryantTimelineEl.appendChild(item);
+}
+
 function initEvents() {
   positionFilter?.addEventListener('change', renderRecruits);
   statusFilter?.addEventListener('change', renderRecruits);
@@ -320,6 +344,7 @@ function init() {
   renderRecruits();
   renderUpdates();
   renderExpertAnalysis();
+  renderBryantTimeline();
   setLastUpdatedText();
   initEvents();
 }
