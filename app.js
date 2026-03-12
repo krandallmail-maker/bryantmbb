@@ -14,6 +14,19 @@ const recruits = [
     notes:
       'Per Prep Hoops, Lyons is a 6-foot-8 forward, knockdown shooter and improved facilitator who can defend 3–5. See full profile for detailed ranking and context.',
   },
+  {
+    name: 'Elijah Hayeems',
+    classYear: 2026,
+    position: 'PG',
+    height: "6'6\"",
+    weight: '—',
+    status: 'committed',
+    hometown: 'Big Tyme Prep Academy (TX)',
+    ranking: 'McDonald’s All-American nominee; Prep Hoops profile',
+    tags: ['Elite positional size', 'Playmaking & scoring', 'Defensive versatility'],
+    notes:
+      "Per Prep Hoops, Hayeems’ McDonald’s All-American nomination is driven by rare positional size at point guard combined with functional skill, two-way versatility, and high-level feel for the game. See his profile for full evaluation.",
+  },
 ];
 
 const updates = [
@@ -52,6 +65,18 @@ const expertAnalysis = [
     snippet:
       'Prep Hoops describes Lyons as a 6-foot-8 forward and knockdown shooter who can also put the ball on the floor, facilitate, and defend multiple spots (3–5).',
     tags: ['Connor Lyons', 'Scouting report', 'Prep Hoops'],
+  },
+  {
+    player: 'Elijah Hayeems',
+    classYear: 2026,
+    position: 'PG',
+    source: 'Prep Hoops',
+    sourceUrl: 'https://prephoops.com/player/elijah-hayeems/',
+    author: 'Jay Frye',
+    date: '2026-01-30',
+    snippet:
+      'Prep Hoops notes that Hayeems’ McDonald’s All-American nomination is driven by rare positional size at point guard combined with functional skill. He creates advantages as both a playmaker and scorer, finishes through contact, and defends multiple positions with plus court awareness.',
+    tags: ['Elijah Hayeems', 'Scouting report', 'Prep Hoops'],
   },
 ];
 
@@ -300,4 +325,3 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-
