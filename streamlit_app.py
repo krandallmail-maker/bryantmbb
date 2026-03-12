@@ -23,6 +23,28 @@ RECRUITS = [
         ),
         "profile_url": "https://prephoops.com/player/connor-lyons/",
     },
+    {
+        "name": "Elijah Hayeems",
+        "class_year": 2026,
+        "position": "PG",
+        "height": "6'6\"",
+        "weight": "—",
+        "status": "committed",
+        "hometown": "Big Tyme Prep Academy (TX)",
+        "ranking": "Bryant commit; McDonald’s All-American nominee; Prep Hoops profile",
+        "tags": [
+            "Elite positional size",
+            "Playmaking & scoring versatility",
+            "Defensive versatility",
+        ],
+        "notes": (
+            "Per Prep Hoops, Hayeems’ McDonald’s All-American nomination is driven by rare "
+            "positional size at the point guard spot combined with functional skill. He "
+            "creates advantages as both a primary playmaker and scoring threat, finishes "
+            "through contact, and defends multiple positions with strong court awareness."
+        ),
+        "profile_url": "https://prephoops.com/player/elijah-hayeems/",
+    },
 ]
 
 UPDATES = [
@@ -64,7 +86,25 @@ EXPERT_ANALYSIS = [
             "multiple spots (3–5)."
         ),
         "tags": ["Connor Lyons", "Scouting report", "Prep Hoops"],
-    }
+    },
+    {
+        "player": "Elijah Hayeems",
+        "class_year": 2026,
+        "position": "PG",
+        "source": "Prep Hoops",
+        "source_url": "https://prephoops.com/player/elijah-hayeems/",
+        "author": "Jay Frye",
+        "date": "2026-01-30",
+        "snippet": (
+            "Prep Hoops notes that Hayeems’ McDonald’s All-American nomination is driven by "
+            "rare positional size at point guard combined with functional skill. He "
+            "consistently creates advantages by seeing over the defense, operating as both a "
+            "primary playmaker and scoring threat depending on game flow, finishes through "
+            "traffic, and defends multiple positions with versatility and strong court "
+            "awareness."
+        ),
+        "tags": ["Elijah Hayeems", "Scouting report", "Prep Hoops"],
+    },
 ]
 
 
