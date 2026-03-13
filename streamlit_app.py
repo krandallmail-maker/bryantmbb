@@ -638,7 +638,18 @@ for idx, recruit in enumerate(RECRUITS_2026):
                 f"[Prep Hoops profile]({recruit['prep_hoops_url']})",
                 help="Opens the public player page on Prep Hoops.",
             )
+   st.markdown(
+        """
+### Support Bryant MBB on Fanstake
 
+If you want to support and stake Bryant Men’s Basketball players like **Ty Tabales**, **Ashley Sims**, **Aarron Davis**, and more,
+check out the dedicated Bryant page on Fanstake:
+
+- [Stake Bryant Bulldogs Men’s Basketball on Fanstake](https://fanstake.com/teams/24/s/bryant-bulldogs)
+
+This section is just a fan promotion and is not an official partnership with Bryant University or Fanstake.
+"""
+    )
 
 st.write("---")
 st.markdown(
