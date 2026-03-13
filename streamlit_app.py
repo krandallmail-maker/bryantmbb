@@ -356,6 +356,18 @@ def render_footer():
         "[Connor Lyons](https://prephoops.com/player/connor-lyons/) and "
         "[Elijah Hayeems](https://prephoops.com/player/elijah-hayeems/)."
     )
+    st.markdown(
+        """
+### Support Bryant MBB on Fanstake
+
+If you want to support and stake Bryant Men’s Basketball players like **Ty Tabales**, **Ashley Sims**, **Aarron Davis**, and more,
+check out the dedicated Bryant page on Fanstake:
+
+- [Stake Bryant Bulldogs Men’s Basketball on Fanstake](https://fanstake.com/teams/24/s/bryant-bulldogs)
+
+This section is just a fan promotion and is not an official partnership with Bryant University or Fanstake.
+"""
+    )
 
 
 # -----------------------------------------------------------------------------
