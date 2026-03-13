@@ -189,6 +189,19 @@ def section_roster_and_portal():
         "Pull in players from the official roster with their bios, photos, and stats. "
         "Use the sliders to grade how likely you think each player is to stay at Bryant."
     )
+    st.markdown(
+        """
+I updated the recruiting news site data so it matches Prep Hoops / X/Twitter / 247Sports / MADE Hoops / Instagram / ESPN as your main sources:
+
+- NEWS examples now include:
+  - A commitment reaffirmation story sourced from X/Twitter (with a placeholder X URL to replace).
+  - A 247Sports notebook-style blurb about Bryant’s 2026 class.
+  - A Prep Hoops game recap for Connor Lyons.
+  - A live-period offer watch item built around X/Twitter clips and event reports.
+  - A 247Sports “interest reported” note on a new 2026 forward target.
+- Tags and statuses now reflect how you actually track things: Commitment update, Offer watch, Interest reported, Prep Hoops recap, 247 article, Social buzz, etc., plus statuses like Committed, Offered / Target, Interest reported, and Class buzz.
+"""
+    )
 
     for player in BRYANT_PLAYERS:
         col_photo, col_info = st.columns([0.4, 1.6])
@@ -520,6 +533,19 @@ st.subheader("Bryant Men’s Basketball Players – Transfer Portal Watch")
 st.caption(
     "Add players from the official roster with their bios, photos, and stats. "
     "Use the slider to grade how likely you think each player is to stay at Bryant."
+)
+st.markdown(
+    """
+I updated the recruiting news site data so it matches Prep Hoops / X/Twitter / 247Sports / MADE Hoops / Instagram / ESPN as your main sources:
+
+- NEWS examples now include:
+  - A commitment reaffirmation story sourced from X/Twitter (with a placeholder X URL to replace).
+  - A 247Sports notebook-style blurb about Bryant’s 2026 class.
+  - A Prep Hoops game recap for Connor Lyons.
+  - A live-period offer watch item built around X/Twitter clips and event reports.
+  - A 247Sports “interest reported” note on a new 2026 forward target.
+- Tags and statuses now reflect how you actually track things: Commitment update, Offer watch, Interest reported, Prep Hoops recap, 247 article, Social buzz, etc., plus statuses like Committed, Offered / Target, Interest reported, and Class buzz.
+"""
 )
 
 for player in BRYANT_PLAYERS:
