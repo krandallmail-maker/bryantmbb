@@ -1,0 +1,13 @@
+{
+  "name": "bryant-2026-recruiting-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A simple static website for tracking the 2026 recruiting class for Bryant Men's Basketball.",
+  "scripts": {
+    "start": "npx live-server --quiet --open=./index.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
+
