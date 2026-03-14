@@ -1,281 +1,287 @@
-"""
-grady_payton.py
----------------
-Grady Payton recruit profile page for the Bryant MBB Streamlit app.
-Scrapes https://prephoops.com/player/grady-payton/ and displays a
-clean recruit card. Falls back to cached data if the page is unreachable.
-
-Usage (add to your app's navigation / pages):
-    import grady_payton
-    grady_payton.show()
-
-Or use directly as a Streamlit page file.
-"""
-
 import streamlit as st
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
 
-# ── Constants ────────────────────────────────────────────────────────────────
-PLAYER_URL = "https://prephoops.com/player/grady-payton/"
-PLAYER_IMAGE = "https://prephoops.com/wp-content/uploads/sites/2/2025/02/IMG_3083.jpeg"
-BRYANT_LOGO = "https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Bryant_Bulldogs_logo.svg/200px-Bryant_Bulldogs_logo.svg.png"
 
-# Cached / fallback data pulled from Prep Hoops on 2026-03-13
-CACHED_DATA = {
-    "name": "Grady Payton",
-    "position": "Small Forward",
-    "class_year": "2026",
-    "height": "6'9\"",
-    "weight": "195 lbs",
-    "high_school": "Capital City",
-    "state": "Missouri",
-    "club": "PAC Basketball",
-    "profile_url": PLAYER_URL,
-    "image_url": PLAYER_IMAGE,
-    "offer": "Bryant University",
-    "news": [
-        {
-            "title": "Forwards and Posts Who Delivered on Championship Saturday",
-            "author": "Earl Austin",
-            "date": "March 8, 2026",
-            "url": "https://prephoops.com/2026/03/forwards-and-posts-who-delivered-on-championship-saturday/",
+st.set_page_config(
+    page_title="Bryant MBB – Class of 2026 Commits",
+    layout="wide",
+)
+
+
+# -----------------------------------------------------------------------------
+# Simple data model – update as new commits are announced
+# -----------------------------------------------------------------------------
+
+COMMITS_2026 = [
+    {
+        "name": "Connor Lyons",
+        "position": "SF",
+        "height": "6'8\"",
+        "class_year": 2026,
+        "status": "Committed to Bryant",
+        "school": "Miller School (VA)",
+        "club": "Team Loaded VA",
+        "links": {
+            "prephoops": "https://prephoops.com/player/connor-lyons/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
         },
-        {
-            "title": "More Recruiting Tidbits",
-            "author": "Earl Austin",
-            "date": "January 31, 2026",
-            "url": "https://prephoops.com/2026/01/more-recruiting-tidbits-47/",
+        "summary": (
+            "Knockdown shooting wing with size. Can space the floor, attack closeouts, and defend "
+            "multiple frontcourt spots thanks to his length and mobility."
+        ),
+    },
+    {
+        "name": "Grady Payton",
+        "position": "G",
+        "height": "6'4\"",
+        "class_year": 2026,
+        "status": "Committed to Bryant",
+        "school": "High school / prep program",
+        "club": "Club / grassroots program",
+        "links": {
+            "prephoops": "https://prephoops.com/player/grady-payton/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
         },
-        {
-            "title": "Milestone Monday",
-            "author": "Earl Austin",
-            "date": "January 26, 2026",
-            "url": "https://prephoops.com/2026/01/milestone-monday-20/",
+        "summary": (
+            "Versatile combo guard who can score at all three levels, slide on and off the ball, "
+            "and compete defensively on the perimeter."
+        ),
+    },
+    {
+        "name": "Elijah Hayeems",
+        "position": "PG",
+        "height": "6'6\"",
+        "class_year": 2026,
+        "status": "Committed to Bryant",
+        "school": "Big Tyme Prep Academy (TX)",
+        "club": "Prep / grassroots program",
+        "links": {
+            "prephoops": "https://prephoops.com/player/elijah-hayeems/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
         },
-        {
-            "title": "Inside the Norm Stewart Classic: What the Event Really Revealed",
-            "author": "Daniel Siehndel",
-            "date": "December 10, 2025",
-            "url": "https://prephoops.com/2025/12/inside-the-norm-stewart-classic-what-the-event-really-revealed/",
-        },
-    ],
-}
+        "summary": (
+            "Big lead guard with rare positional size. Sees over the defense, toggles between "
+            "primary playmaker and scorer, and uses his length to guard multiple spots."
+        ),
+    },
+]
 
 
-# ── Scraper ───────────────────────────────────────────────────────────────────
-def scrape_player(url: str) -> dict:
-    """Attempt a live scrape of the Prep Hoops player page."""
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/122.0.0.0 Safari/537.36"
-        )
-    }
-    try:
-        resp = requests.get(url, headers=headers, timeout=10)
-        resp.raise_for_status()
-    except Exception:
-        return {}
+# -----------------------------------------------------------------------------
+# Global black & gold theme via CSS
+# -----------------------------------------------------------------------------
 
-    soup = BeautifulSoup(resp.text, "html.parser")
-    data = {}
+BLACK = "#050505"
+GOLD = "#f4c542"
+GOLD_SOFT = "#ffd666"
+CARD_BG = "#111111"
+BORDER = "#333333"
 
-    # Player name
-    h3 = soup.find("h3", string=lambda t: t and "Payton" in t)
-    if h3:
-        data["name"] = h3.get_text(strip=True)
-
-    # Bio paragraph
-    about = soup.find("div", class_="player-about") or soup.find("p", string=lambda t: t and "6'9" in str(t))
-    if about:
-        data["bio"] = about.get_text(" ", strip=True)
-
-    # News items
-    news_items = []
-    for article in soup.select("a[href*='prephoops.com/202']")[:6]:
-        title_tag = article.find("h2") or article.find("h3") or article.find("p")
-        if title_tag:
-            news_items.append({
-                "title": title_tag.get_text(strip=True),
-                "url": article["href"],
-                "date": "",
-                "author": "",
-            })
-    if news_items:
-        data["news"] = news_items
-
-    # Image
-    img = soup.find("img", {"src": lambda s: s and "IMG_3083" in str(s)})
-    if img:
-        data["image_url"] = img["src"].split("?")[0]
-
-    return data
-
-
-# ── Main display ──────────────────────────────────────────────────────────────
-def show():
-    st.set_page_config(
-        page_title="Grady Payton | Bryant MBB Recruiting",
-        page_icon="🏀",
-        layout="wide",
-    )
-
-    # Try live scrape; merge with cached fallback
-    live = scrape_player(PLAYER_URL)
-    player = {**CACHED_DATA, **live}  # live data wins if present
-
-    # ── Header ────────────────────────────────────────────────────────────────
-    st.markdown(
-        """
-        <style>
-        .recruit-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-            border-radius: 16px;
-            padding: 2rem;
+st.markdown(
+    f"""
+    <style>
+        .stApp {{
+            background-color: {BLACK};
             color: white;
-            margin-bottom: 1.5rem;
+        }}
+
+        /* Sidebar */
+        section[data-testid="stSidebar"] > div {{
+            background: radial-gradient(circle at top left, #222 0, #000 55%);
+            border-right: 1px solid {BORDER};
+        }}
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3,
+        section[data-testid="stSidebar"] p {{
+            color: {GOLD_SOFT} !important;
+        }}
+
+        /* Headings */
+        h1, h2, h3, h4 {{
+            color: {GOLD} !important;
+        }}
+
+        /* Horizontal rules */
+        hr {{
+            border: none;
+            border-top: 1px solid {BORDER};
+            margin: 0.75rem 0 1.5rem 0;
+        }}
+
+        /* Player cards */
+        .player-card {{
+            background: linear-gradient(135deg, {CARD_BG} 0%, #000 60%);
+            border-radius: 14px;
+            padding: 1.1rem 1.25rem;
+            border: 1px solid {BORDER};
+            box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+            transition: transform 120ms ease-out, box-shadow 120ms ease-out,
+                        border-color 120ms ease-out;
+        }}
+        .player-card:hover {{
+            transform: translateY(-3px);
+            box-shadow: 0 0 22px rgba(0, 0, 0, 0.95);
+            border-color: {GOLD};
+        }}
+        .player-name {{
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }}
+        .player-meta {{
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }}
+        .status-pill {{
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.12rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: rgba(244, 197, 66, 0.12);
+            border: 1px solid {GOLD};
+            color: {GOLD_SOFT};
+        }}
+        .status-dot {{
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: {GOLD_SOFT};
+        }}
+
+        .links-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.75rem;
+        }}
+        .link-pill {{
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            border: 1px solid {BORDER};
+            background: rgba(255, 255, 255, 0.06);
+            color: white !important;
+        }}
+        .link-pill:hover {{
+            border-color: {GOLD};
+            box-shadow: 0 0 10px rgba(244, 197, 66, 0.35);
+        }}
+
+        /* Streamlit widgets – buttons, selects, etc. */
+        .stButton>button {{
+            background: linear-gradient(135deg, {GOLD} 0%, {GOLD_SOFT} 60%);
+            color: #000;
+            border-radius: 999px;
+            border: none;
+            padding: 0.45rem 1.2rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }}
+        .stButton>button:hover {{
+            filter: brightness(1.05);
+            box-shadow: 0 0 14px rgba(244, 197, 66, 0.6);
+        }}
+
+        /* Remove default table background */
+        .stDataFrame, .stTable {{
+            background-color: transparent;
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# -----------------------------------------------------------------------------
+# Layout
+# -----------------------------------------------------------------------------
+
+st.title("Bryant Bulldogs Men’s Basketball")
+st.subheader("Class of 2026 Recruiting Class – Commit List")
+
+st.markdown(
+    """
+Welcome to the **black & gold** tracker for Bryant's men's basketball **class of 2026 commits**.
+
+This page is meant to be a simple, clean way to see who is in the class at a glance.
+Update the list in the code as new commitments are announced.
+"""
+)
+
+st.write("---")
+
+
+cols = st.columns(len(COMMITS_2026))
+
+for idx, recruit in enumerate(COMMITS_2026):
+    with cols[idx]:
+        links = recruit.get("links", {}) or {}
+        link_parts = []
+        link_label_map = {
+            "prephoops": "Prep Hoops",
+            "x": "X",
+            "instagram": "Instagram",
+            "247": "247Sports",
+            "espn": "ESPN",
         }
-        .stat-box {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            text-align: center;
-        }
-        .stat-label { font-size: 0.72rem; color: #aab4be; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-value { font-size: 1.35rem; font-weight: 700; color: #f5c518; margin-top: 2px; }
-        .news-item {
-            border-left: 3px solid #f5c518;
-            padding: 0.5rem 0.75rem;
-            margin-bottom: 0.75rem;
-            background: #f9f9f9;
-            border-radius: 0 6px 6px 0;
-        }
-        .news-item a { color: #0f3460; font-weight: 600; text-decoration: none; }
-        .news-item a:hover { text-decoration: underline; }
-        .news-meta { font-size: 0.78rem; color: #666; margin-top: 2px; }
-        .source-badge {
-            display: inline-block;
-            background: #e8f4f8;
-            border: 1px solid #bee3f8;
-            color: #2b6cb0;
-            font-size: 0.72rem;
-            padding: 2px 8px;
-            border-radius: 12px;
-            margin-top: 0.25rem;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+        for key, label in link_label_map.items():
+            url = (links.get(key) or "").strip()
+            if url:
+                link_parts.append(f'<a class="link-pill" href="{url}" target="_blank">{label}</a>')
 
-    # Bryant header bar
-    col_logo, col_title = st.columns([1, 6])
-    with col_logo:
-        st.image(BRYANT_LOGO, width=70)
-    with col_title:
-        st.markdown("## 🏀 Bryant Bulldogs — Recruiting Profile")
-        st.caption("Class of 2026 Commit")
+        links_html = ""
+        if link_parts:
+            links_html = f'<div class="links-row">{"".join(link_parts)}</div>'
 
-    st.divider()
-
-    # ── Player card ───────────────────────────────────────────────────────────
-    img_col, info_col = st.columns([1, 2], gap="large")
-
-    with img_col:
-        st.image(
-            player.get("image_url", PLAYER_IMAGE),
-            width=280,
-            caption="Grady Payton — Prep Hoops",
-        )
-        st.markdown(
-            f'<a href="{PLAYER_URL}" target="_blank" class="source-badge">📄 View Full Profile on Prep Hoops</a>',
-            unsafe_allow_html=True,
-        )
-
-    with info_col:
         st.markdown(
             f"""
-            <div class="recruit-card">
-                <div style="font-size:2rem; font-weight:800; letter-spacing:-0.5px;">{player['name']}</div>
-                <div style="font-size:1rem; color:#aab4be; margin-bottom:1.2rem;">
-                    {player['position']} &nbsp;·&nbsp; Class of {player['class_year']}
+            <div class="player-card">
+                <div class="player-name">{recruit['name']}</div>
+                <div class="player-meta">
+                    {recruit['position']} &nbsp;·&nbsp; Class of {recruit['class_year']}<br/>
+                    {recruit['height']} &nbsp;·&nbsp; {recruit.get('school', '')}
                 </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        s1, s2, s3, s4 = st.columns(4)
-        for col, label, val in [
-            (s1, "Height", player["height"]),
-            (s2, "Weight", player["weight"]),
-            (s3, "State", player["state"]),
-            (s4, "Class", player["class_year"]),
-        ]:
-            with col:
-                st.markdown(
-                    f"""
-                    <div class="stat-box">
-                        <div class="stat-label">{label}</div>
-                        <div class="stat-value">{val}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True,
-                )
-
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown("#### 🏫 School & Club")
-        st.markdown(
-            f"**High School:** {player['high_school']} ({player['state']})  \n"
-            f"**Club:** {player['club']}  \n"
-            f"**Offer / Commit:** {player.get('offer', 'Bryant University')}"
-        )
-
-    st.divider()
-
-    # ── Bio ───────────────────────────────────────────────────────────────────
-    st.markdown("### 📋 About Grady")
-    bio = player.get(
-        "bio",
-        f"Grady Payton is a **{player['height']} Small Forward** in the **{player['class_year']} class**. "
-        f"He attends **{player['high_school']}** in {player['state']} and plays club basketball "
-        f"for **{player['club']}**. Payton has drawn interest from Bryant University and is one of "
-        f"the top forwards in Missouri.",
-    )
-    st.write(bio)
-
-    # ── News ──────────────────────────────────────────────────────────────────
-    st.markdown("### 📰 Recent News")
-    for item in player.get("news", []):
-        meta_parts = [p for p in [item.get("author"), item.get("date")] if p]
-        meta = " · ".join(meta_parts)
-        st.markdown(
-            f"""
-            <div class="news-item">
-                <a href="{item['url']}" target="_blank">{item['title']}</a>
-                {"<div class='news-meta'>" + meta + "</div>" if meta else ""}
+                <div style="margin-top: 0.6rem; margin-bottom: 0.6rem;">
+                    <span class="status-pill">
+                        <span class="status-dot"></span>
+                        {recruit['status']}
+                    </span>
+                </div>
+                <div style="font-size: 0.9rem; line-height: 1.35;">
+                    {recruit['summary']}
+                </div>
+                <div style="margin-top: 0.6rem; font-size: 0.8rem; opacity: 0.8;">
+                    {recruit.get('club', '')}
+                </div>
+                {links_html}
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    st.markdown(
-        f'<a href="{PLAYER_URL}" target="_blank" class="source-badge">🔗 See all news on Prep Hoops</a>',
-        unsafe_allow_html=True,
-    )
 
-    # ── Footer ────────────────────────────────────────────────────────────────
-    st.divider()
-    st.caption(
-        f"Data sourced from [Prep Hoops]({PLAYER_URL}) · "
-        f"Last updated: {datetime.today().strftime('%B %d, %Y')}"
-    )
+st.write("---")
+st.caption(
+    "Unofficial fan-built page for Bryant Men’s Basketball recruiting. "
+    "Not affiliated with Bryant University or any official recruiting service."
+)
 
-
-# ── Entry point ───────────────────────────────────────────────────────────────
-if __name__ == "__main__":
-    show()
