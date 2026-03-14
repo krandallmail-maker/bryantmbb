@@ -20,6 +20,13 @@ COMMITS_2026 = [
         "status": "Committed to Bryant",
         "school": "Miller School (VA)",
         "club": "Team Loaded VA",
+        "links": {
+            "prephoops": "https://prephoops.com/player/connor-lyons/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
+        },
         "summary": (
             "Knockdown shooting wing with size. Can space the floor, attack closeouts, and defend "
             "multiple frontcourt spots thanks to his length and mobility."
@@ -33,6 +40,13 @@ COMMITS_2026 = [
         "status": "Committed to Bryant",
         "school": "High school / prep program",
         "club": "Club / grassroots program",
+        "links": {
+            "prephoops": "https://prephoops.com/player/grady-payton/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
+        },
         "summary": (
             "Versatile combo guard who can score at all three levels, slide on and off the ball, "
             "and compete defensively on the perimeter."
@@ -46,6 +60,13 @@ COMMITS_2026 = [
         "status": "Committed to Bryant",
         "school": "Big Tyme Prep Academy (TX)",
         "club": "Prep / grassroots program",
+        "links": {
+            "prephoops": "https://prephoops.com/player/elijah-hayeems/",
+            "x": "",
+            "instagram": "",
+            "247": "",
+            "espn": "",
+        },
         "summary": (
             "Big lead guard with rare positional size. Sees over the defense, toggles between "
             "primary playmaker and scorer, and uses his length to guard multiple spots."
@@ -141,6 +162,29 @@ st.markdown(
             background: {GOLD_SOFT};
         }}
 
+        .links-row {{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 0.75rem;
+        }}
+        .link-pill {{
+            display: inline-flex;
+            align-items: center;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            border: 1px solid {BORDER};
+            background: rgba(255, 255, 255, 0.06);
+            color: white !important;
+        }}
+        .link-pill:hover {{
+            border-color: {GOLD};
+            box-shadow: 0 0 10px rgba(244, 197, 66, 0.35);
+        }}
+
         /* Streamlit widgets – buttons, selects, etc. */
         .stButton>button {{
             background: linear-gradient(135deg, {GOLD} 0%, {GOLD_SOFT} 60%);
@@ -190,6 +234,24 @@ cols = st.columns(len(COMMITS_2026))
 
 for idx, recruit in enumerate(COMMITS_2026):
     with cols[idx]:
+        links = recruit.get("links", {}) or {}
+        link_parts = []
+        link_label_map = {
+            "prephoops": "Prep Hoops",
+            "x": "X",
+            "instagram": "Instagram",
+            "247": "247Sports",
+            "espn": "ESPN",
+        }
+        for key, label in link_label_map.items():
+            url = (links.get(key) or "").strip()
+            if url:
+                link_parts.append(f'<a class="link-pill" href="{url}" target="_blank">{label}</a>')
+
+        links_html = ""
+        if link_parts:
+            links_html = f'<div class="links-row">{"".join(link_parts)}</div>'
+
         st.markdown(
             f"""
             <div class="player-card">
@@ -210,6 +272,7 @@ for idx, recruit in enumerate(COMMITS_2026):
                 <div style="margin-top: 0.6rem; font-size: 0.8rem; opacity: 0.8;">
                     {recruit.get('club', '')}
                 </div>
+                {links_html}
             </div>
             """,
             unsafe_allow_html=True,
