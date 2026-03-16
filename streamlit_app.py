@@ -9,28 +9,7 @@ import pandas as pd
 # NOTE: Fill in real photo URLs and stats from the official Bryant roster page.
 BRYANT_PLAYERS = [
     {
-        "name": "Example Guard",
-        "position": "G",
-        "year": "Jr.",
-        "height": "6'2\"",
-        "weight": "185 lbs",
-        "number": 1,
-        "description": (
-            "Two-way combo guard who can pressure the ball, make plays out of ball screens, "
-            "and stretch the floor as a catch-and-shoot threat."
-        ),
-        "profile_url": "https://bryantbulldogs.com/sports/mens-basketball",
-        "photo_url": "https://via.placeholder.com/160x200.png?text=Player+Photo",
-        "stats": {
-            "PPG": 10.5,
-            "RPG": 3.2,
-            "APG": 4.1,
-            "FG%": 0.43,
-            "3P%": 0.36,
-        },
-    },
-    # Add more Bryant players here in the same shape.
-]
+        Aaron Davis: Wing
 
 
 # 2026 recruiting commits – based on public descriptions and links to Prep Hoops
