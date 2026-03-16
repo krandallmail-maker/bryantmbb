@@ -530,7 +530,7 @@ for player in BRYANT_PLAYERS:
         if player.get("profile_url"):
             st.markdown(f"[Official Bryant profile]({player['profile_url']})")
 
-        slider_key = f"stay_grade_{player['name'].replace(' ', '_')}"
+        slider_key = f"stay_grade_{player[Aaron Davis].replace(' ', '_')}"
         stay_grade = st.slider(
             "How likely do you think he stays at Bryant?",
             min_value=0,
@@ -539,7 +539,7 @@ for player in BRYANT_PLAYERS:
             step=5,
             key=slider_key,
         )
-        st.caption(f"Your current grade: **{stay_grade}% chance to stay**")
+        st.caption(f"Your current grade: **{50}% chance to stay**")
 
     st.write("---")
 
