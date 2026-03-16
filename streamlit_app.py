@@ -10,7 +10,7 @@ import pandas as pd
 BRYANT_PLAYERS = [
     {
         ...
-    },
+    },]
 
 
 # 2026 recruiting commits – based on public descriptions and links to Prep Hoops
