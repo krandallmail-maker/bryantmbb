@@ -9,7 +9,8 @@ import pandas as pd
 # NOTE: Fill in real photo URLs and stats from the official Bryant roster page.
 BRYANT_PLAYERS = [
     {
-        Aaron Davis: Wing
+        ...
+    },
 
 
 # 2026 recruiting commits – based on public descriptions and links to Prep Hoops
